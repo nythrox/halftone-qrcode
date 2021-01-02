@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Halftone QR Code Generator</title>
+    <script src="./public/jquery-2.1.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.js"></script>
+    <script src="./public/qrcodenew.js"></script>
+
+    <script src="./public/halftoneqr2.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.css"
+    />
+    <style>
+      body {
+        padding: 30px;
+      }
+      .options {
+        width: 50%;
+      }
+      #crop {
+        width: 100%;
+        max-width: 100%;
+      }
+      .cr-boundary {
+        max-width: 100%;
+      }
+      .display {
+        width: 50%;
+      }
+      .row {
+        display: flex;
+      }
+      canvas {
+        margin: 30px;
+        display: block;
+        box-shadow: 0px solid transparent;
+        image-rendering: -webkit-crisp-edges;
+        image-rendering: crisp-edges;
+        max-width: 100%;
+        max-height: 100vh;
+        image-rendering: pixelated;
+      }
+    </style>
+    <link rel="stylesheet" href="./public/style.css" />
+  </head>
+  <body>
+    <div class="row">
+      <div class="options">
+        <h1>Halftone QR Code Generator</h1>
+        <h2>Drop an image into your browser, then click generate.</h2>
+        <textarea id="input" cols="50" rows="5">shorturl.at/mCOP0</textarea
+        ><br />
+        Redundancy (error correction level):
+        <select id="error_level">
+          <option value="L">Low (7%)</option>
+          <option value="M">Medium (15%)</option>
+          <option value="Q">Quartile (25%)</option>
+          <option value="H" selected>High (30%)</option> </select
+        ><br />
+        QR size: (up to 40)
+        <input type="text" id="size" value="6" />
+        <br />
+        Quality
+        <input type="text" id="quality" value="3" />
+        <br />Block Size
+        <input type="text" id="block-size" value="3" />(recommended 3 for scan
+        to work) <br />Background Type:
+        <select id="background">
+          <option value="trans">Transparent</option>
+          <option value="noise">Noise</option
+          ><option value="large">Noise (Large)</option>
+        </select>
+        <br />
+        pixelation
+        <input type="checkbox" id="pixelate" checked />
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value="85"
+          class="slider"
+          id="pixelation"
+        /><br />
+        dithering
+        <input type="checkbox" id="should-dither" />
+        <input
+          type="range"
+          min="0"
+          max="255"
+          value="127"
+          class="slider"
+          id="dither"
+        />
+        <br />
+        black and white
+        <input type="checkbox" id="blacknwhite" checked />
+        <input
+          type="range"
+          min="0"
+          max="255"
+          value="127"
+          class="slider"
+          id="contrast"
+        />
+        <br />
+        greyscale
+        <input type="checkbox" id="should-greyscale" />
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value="100"
+          class="slider"
+          id="greyscale"
+        />
+        <div id="crop"></div>
+        <!-- <input type="button" id="go" value="Generate" /><br /> -->
+      </div>
+      <div class="display">
+        <a
+          id="download"
+          href="about:blank"
+          download="qr.png"
+          target="_blank"
+          title="Download QR Code"
+          ><canvas id="output"></canvas
+        ></a>
+      </div>
+    </div>
+    <br />
+    Credits:
+    <a href="https://github.com/nythrox" target="_blank">Jason</a>
+    <br />
+    <a href="https://jsfiddle.net/lachlan/r8qWV/" target="_blank"> Original version</a> by
+    <a href="http://lach.la" target="_blank">Lachlan</a>
+
+    <div id="overlay">Drop image</div>
+  </body>
+</html>
