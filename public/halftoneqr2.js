@@ -2,26 +2,72 @@ function debugBase64(base64URL) {
   var win = window.open();
   win.document.write(
     '<iframe src="' +
-      base64URL +
-      '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>'
+    base64URL +
+    '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>'
   );
 }
 var image;
 var has_image = false;
 
-function halftoneQR(QRBytes, controlBytes, canvas) {
+function halftoneQR(imageCanvas) {
   const pixelSize = parseFloat($("#quality").val());
   const blockSize = parseFloat($("#block-size").val()) * pixelSize;
-  var ctx = canvas.getContext("2d");
-  renderImage(canvas);
+
+  var text = $("#input").val();
+  var errorLevel = $("#error_level").val();
+  var userSize = $("#size").val();
+
+  var QRsize = userSize;
+
+  var qr = qrcode2(QRsize, errorLevel);
+  qr.addData(text);
+  qr.make();
+  const QRBytes = qr.returnByteArray();
+
+  const background = $("#background").val();
+  const outputCanvas = $("#output").get(0);
+  outputCanvas.width = outputCanvas.height = QRBytes.length * blockSize;
+
+
+  var outputCtx = outputCanvas.getContext("2d");
+
+  background == "noise" && drawRandomBytes(outputCanvas, QRBytes);
+  background == "large" && drawRandomBytes(outputCanvas, QRBytes, true);
+  
+  
+  var tempCanvas = document.createElement("canvas");
+  var tempCtx = tempCanvas.getContext("2d");
+
+  tempCanvas.width = outputCanvas.width;
+  tempCanvas.height = outputCanvas.height;
+  tempCtx.drawImage(imageCanvas, 0, 0, tempCanvas.width, tempCanvas.height);
+
   const shouldPixelate = $("#pixelate").is(":checked");
   const shouldContrast = $("#blacknwhite").is(":checked");
   const shouldGreyscale = $("#should-greyscale").is(":checked");
   const shouldDither = $("#should-dither").is(":checked");
-  shouldPixelate && pixelate(canvas);
-  shouldDither && dither(canvas);
-  shouldContrast && constrast(canvas);
-  shouldGreyscale && greyscale(canvas);
+  shouldPixelate && pixelate(tempCanvas);
+  shouldDither && dither(tempCanvas);
+  shouldContrast && constrast(tempCanvas);
+  shouldGreyscale && greyscale(tempCanvas);
+
+  outputCtx.drawImage(tempCanvas, 0, 0, outputCanvas.width, outputCanvas.height);
+  
+  var controls = qrcode2(QRsize, errorLevel);
+  controls.addData(text);
+  controls.make(true);
+
+  drawTransparent(outputCanvas, QRBytes, controls.returnByteArray(), blockSize, pixelSize)
+
+  $("#download").attr("href", outputCanvas.toDataURL());
+}
+
+function drawTransparent(canvas, QRBytes, controlBytes, blockSize, pixelSize) {
+  
+  var ctx = canvas.getContext("2d");
+
+  drawQrContent()
+  drawQrControl()
 
   function drawQrContent() {
     for (var byteRow = 0; byteRow < QRBytes.length; byteRow++) {
@@ -37,7 +83,6 @@ function halftoneQR(QRBytes, controlBytes, canvas) {
       }
     }
   }
-  drawQrContent();
 
   function drawQrControl() {
     for (var byteRow = 0; byteRow < controlBytes.length; byteRow++) {
@@ -62,14 +107,10 @@ function halftoneQR(QRBytes, controlBytes, canvas) {
       }
     }
   }
-  drawQrControl();
-
-  // rerender();
-  $("#download").attr("href", canvas.toDataURL());
 }
 
 function drawRandomBytes(canvas, QRBytes, big) {
-  
+
   const pixelSize = parseFloat($("#quality").val());
   const blockSize = parseFloat($("#block-size").val()) * pixelSize;
 
@@ -80,8 +121,8 @@ function drawRandomBytes(canvas, QRBytes, big) {
   tempCanvas.width = canvas.width;
   tempCanvas.height = canvas.height;
   tempCtx.drawImage(canvas, 0, 0, tempCanvas.width, tempCanvas.height);
-  
-  
+
+
   if (big) {
     for (var byteRow = 0; byteRow < QRBytes.length; byteRow++) {
       for (var byteCell = 0; byteCell < QRBytes[byteRow].length; byteCell++) {
@@ -122,7 +163,7 @@ function drawRandomBytes(canvas, QRBytes, big) {
     }
   }
   ctx.drawImage(tempCanvas, 0, 0, canvas.width, canvas.height);
-  }
+}
 
 function dither(canvas) {
   var ctx = canvas.getContext("2d");
@@ -173,19 +214,6 @@ function dither(canvas) {
   ctx.putImageData(pixels, 0, 0);
 }
 
-function renderImage(canvas) {
-  var ctx = canvas.getContext("2d");
-  var tempCanvas = document.createElement("canvas");
-  var tempCtx = tempCanvas.getContext("2d");
-
-  tempCanvas.width = canvas.width;
-  tempCanvas.height = canvas.height;
-  tempCtx.drawImage(canvas, 0, 0, tempCanvas.width, tempCanvas.height);
-  canvas.style = {};
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(tempCanvas, 0, 0, canvas.width, canvas.height);
-}
-
 function pixelate(canvas) {
   const pixelation = parseFloat($("#pixelation").val());
   const ctx = canvas.getContext("2d");
@@ -198,6 +226,7 @@ function pixelate(canvas) {
   const scaledWidth = width * (1 - pixelation / 100);
   const scaledHeight = height * (1 - pixelation / 100);
   // const tempCtx = tempCanvas.getContext("2d");
+  console.log(scaledWidth, scaledHeight)
 
   tempCanvas.width = scaledWidth;
   tempCanvas.height = scaledHeight;
@@ -287,10 +316,6 @@ $(document).ready(function () {
     return false;
   });
 
-  // $("#go").on("click", function () {
-  //   rerender();
-  // });
-  let canRerender = true;
   let shouldRerender = false;
   setInterval(() => {
     canRerender = true;
@@ -309,32 +334,14 @@ $(document).ready(function () {
 
   function rerender() {
     croppie.result({ type: "rawcanvas" }).then(function (canvas) {
-      const pixelSize = parseFloat($("#quality").val());
-      const blockSize = parseFloat($("#block-size").val()) * pixelSize;
 
-      var text = $("#input").val();
 
-      var errorLevel = $("#error_level").val();
 
-      var userSize = $("#size").val();
-      var QRsize = userSize;
 
-      var qr = qrcode2(QRsize, errorLevel);
-      qr.addData(text);
-      qr.make();
-      const QRBytes = qr.returnByteArray();
 
-      var controls = qrcode2(QRsize, errorLevel);
-      controls.addData(text);
-      controls.make(true);
-      const background = $("#background").val();
-      const output = $("#output").get(0);
-      output.width = output.height = QRBytes.length * blockSize;
-      const ctx = output.getContext("2d");
-      ctx.drawImage(canvas, 0, 0, output.width, output.height);
-      halftoneQR(QRBytes, controls.returnByteArray(), output);
-      background == "noise" && drawRandomBytes(output, QRBytes);
-      background == "large" && drawRandomBytes(output, QRBytes, true);
+
+
+      halftoneQR(canvas);
       shouldRerender = false;
     });
   }
