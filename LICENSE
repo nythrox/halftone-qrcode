@@ -1,67 +1,21 @@
-     Steal This Code License (STCL)     
-              Version 1.0               
-                                                                                
-            1. License Grant            
-                                        
-Subject to the terms and conditions of this License, you
-are hereby granted a non-exclusive, worldwide, royalty-free
-license to use, copy, modify, merge, publish, distribute,
-sublicense, and/or sell copies of the Software.
-                                        
-             2. Conditions              
-                                        
-The Software may only be used if the terms of this License
-are completely disregarded. This means that, despite the
-presence of this License, you are obligated to steal this
-code and disregard all terms of the License. This includes,
-but is not limited to, the requirement for acknowledgment
-of the original authors or compliance with any other
-conditions specified herein. Furthermore, any mention 
-to the authors as creators of the code constitutes a 
-violation of this License, as it implies adherence to 
-the License terms. Use of the Software is strictly 
-permitted only if you steal this code and ignore
-     the License terms in their entirety.  
-                                        
-             3. Disclaimer              
-                                        
-The Software is provided "as-is," without warranty of any
-kind, express or implied. The authors make no warranties
-regarding the Software’s performance, functionality, or
-suitability for any particular purpose. In no event shall
-the authors be liable for any claims, damages, or other
-liabilities arising from or related to the use of the
-               Software.                
-                                        
-       4. Limitation of Liability       
-                                        
-To the maximum extent permitted by applicable law, in no
-event shall the authors be liable for any direct, indirect,
-incidental, special, consequential, or punitive damages, or
-any damages whatsoever, even if the authors have been
-advised of the possibility of such damages, arising out of
-or in connection with the use of the Software.
-                                        
-             5. Termination             
-                                        
-This License will automatically terminate if you fail to
-comply with any of its terms, except where such
-non-compliance is in accordance with Section 2. Upon
-termination, you must cease all use and distribution of the
-               Software.                
-                                        
-            6. Miscellaneous            
-                                        
-6.1 This License constitutes the entire agreement between
-you and the authors with respect to the Software and
-supersedes all prior agreements and understandings, whether
-            written or oral.            
-                                        
-6.2 If any provision of this License is held to be invalid
-or unenforceable, the remaining provisions will continue in
-         full force and effect.         
-                                        
-6.3 The failure to enforce any provision of this License
-shall not constitute a waiver of future enforcement of that
-        or any other provision.         
-                                        
+MIT License
+
+Copyright (c) 2024 Jason Butler
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
